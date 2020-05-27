@@ -9,14 +9,5 @@
 
 # 项目流程
 
-``` mermaid
-gantt 
-title 2020分布式课程实验二
-dateFormat MM-DD  
-section 基于RESTful架构的航班订票系统
-接口设计 :active,des1,05-28,5d
-前端实现 :des2,06-01,10d
-数据库设计 :des3,after des1,7d
-后端实现 :des4,06-03,10d
-服务器部署 :des5,after des4,5d
-```
+![UTOOLS1590564729797.png](https://img03.sogoucdn.com/app/a/100520146/3ac8221f2e7d47e3ef5bcd16e6a38f8f)
+
