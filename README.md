@@ -9,5 +9,4 @@
 
 # 项目流程
 
-![UTOOLS1590564729797.png](https://img03.sogoucdn.com/app/a/100520146/3ac8221f2e7d47e3ef5bcd16e6a38f8f)
-
+![tANj41.png](https://s1.ax1x.com/2020/05/27/tANj41.png)
