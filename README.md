@@ -9,7 +9,6 @@
 
 # 项目流程
 
-![tANj41.png](https://s1.ax1x.com/2020/05/27/tANj41.png)
 
 ``` mermaid
 gantt 
@@ -22,3 +21,9 @@ section 基于RESTful架构的航班订票系统
 后端实现 :des4,06-03,10d
 服务器部署 :des5,after des4,5d
 ```
+
+
+# 项目流程
+
+## 模块设计
+API：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/1.0.0
