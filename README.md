@@ -27,3 +27,6 @@ section 基于RESTful架构的航班订票系统
 
 ## 模块设计
 API：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/1.0.0
+
+原型设计：https://fbp2kq.axshare.com
+(国内可能访问极其慢)
