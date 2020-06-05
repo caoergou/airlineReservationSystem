@@ -8,20 +8,7 @@
 
 # 项目流程
 
-```
-![Alt text](https://g.gravizo.com/svg?
-    digraph G {
-        main -> parse -> execute;
-        main -> init;
-        main -> cleanup;
-        execute -> make_string;
-        execute -> printf
-        init -> make_string;
-        main -> printf;
-        execute -> compare;
-    }
-)
-```
+![img](https://cdn.nlark.com/yuque/__mermaid_v3/45d934a7278fb9cda8022b18bd6bcd2c.svg)
 
 
 ``` mermaid
