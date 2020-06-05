@@ -27,7 +27,9 @@ section 基于RESTful架构的航班订票系统
 # 项目流程
 ## 时序图
 
-![img](https://cdn.nlark.com/yuque/__mermaid_v3/12a4c8980955e70ed2ae8c40aa043e64.svg)
+### 流程图代码
+
+Github不支持mermaid语法，参看下面的图片或复制代码使用**支持mermaid语法的markdown编辑器**查看
 
 ``` mermaid
 sequenceDiagram
@@ -36,8 +38,7 @@ participant 浏览器
 participant 到哪儿Web服务器
 participant Airline航空公司
 participant Payment支付中心
-activate Airline航空公司
-activate Payment支付中心
+
 activate 用户
 
 用户->>+浏览器:打开浏览器
@@ -54,26 +55,26 @@ Airline航空公司-->>到哪儿Web服务器:航班信息
 
 用户->>浏览器:订票
 浏览器->>到哪儿Web服务器:order 用户预定航班
-到哪儿Web服务器->>+Payment支付中心:Payment 创建支付订单
+到哪儿Web服务器->>+Payment支付中心:payment/new 创建支付订单
 Payment支付中心-->>到哪儿Web服务器:订单号
 到哪儿Web服务器-->>浏览器:跳转到支付界面
 浏览器-->>浏览器:弹窗产生支付界面
-浏览器->>Payment支付中心:账户当前状态
+浏览器->>Payment支付中心:payment/login 登录获取账户当前状态
 Payment支付中心-->>浏览器:账户当前状态
 浏览器-->>用户:账户当前状态
 
 用户->>浏览器:确定支付
-浏览器->>Payment支付中心:payment 用户支付请求
+浏览器->>Payment支付中心:payment/pay 用户支付请求
 Payment支付中心-->>浏览器:用户支付结果
 浏览器-->>用户:支付结果
 浏览器-->>浏览器:跳转到航班预定界面
 用户->>浏览器:选择支付结果
 alt 用户选择支付成功
 浏览器->>到哪儿Web服务器:支付成功
-到哪儿Web服务器->>Payment支付中心:verifyOrder 验证支付订单信息
+到哪儿Web服务器->>Payment支付中心:payment/verifyOrder 验证支付订单信息
 Payment支付中心-->>到哪儿Web服务器:订单支付信息
 alt 订单已支付
-到哪儿Web服务器->>Airline航空公司:order/{flight} 订票
+到哪儿Web服务器->>Airline航空公司:airline/order/{flight} 订票
 Airline航空公司-->>到哪儿Web服务器:订票结果
 到哪儿Web服务器-->>浏览器:订票结果
 浏览器-->>用户:订票结果
@@ -85,15 +86,24 @@ else 用户选择支付失败
 浏览器-->>-用户:订单支付失败，支付失败
 end
 
+deactivate Airline航空公司
+deactivate Payment支付中心
 deactivate 到哪儿Web服务器
 deactivate 用户
 ```
 
+### 流程图浏览
+
+![img](https://cdn.nlark.com/yuque/__mermaid_v3/d0f808cab507058bd6f60da9c4f28408.svg)
 
 ## 模块设计
-API：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/1.0.0
 
-原型设计：https://fbp2kq.axshare.com
+**API 1.0.0 版本**：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/1.0.0        
+**API 2.0.0 版本**：https://app.swaggerhub.com/apis/homicideGroup/flightReservationSystem/2.0.0
+
+
+
+**原型设计**：https://fbp2kq.axshare.com
 (国内可能访问极其慢)
 
 
