@@ -108,6 +108,7 @@ deactivate 用户
 
 #### API版本
 
+**API 2.0.2 版本**：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/2.0.2         
 **API 2.0.1 版本**：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/2.0.1       
 **API 2.0.0 版本**：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/2.0.0               
 **API 1.0.0 版本**：https://app.swaggerhub.com/apis-docs/homicideGroup/flightReservationSystem/1.0.0        
@@ -116,8 +117,9 @@ deactivate 用户
 
 #### API更新说明
 
-**2.0.0** 版本更新说明 根据时序图增加了部分API          
-**2.0.1** 版本更新说明 根据后端程序员要求修改了FindByPeriodRoute的API
+__2.0.0__ 版本更新说明 根据时序图增加了部分API          
+__2.0.1__ 版本更新说明 根据后端程序员要求修改了FindByPeriodRoute的API        
+__2.0.2__ 版本更新说明 修改了order的相关参数,并修改了Order的返回值
 
 -------------------------
 
