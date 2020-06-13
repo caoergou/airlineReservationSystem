@@ -120,7 +120,7 @@ class MainSiteService {
         if(!responseBody.isPaid){
             val order = orderRepo.findOrderByOrderId(orderId) ?: throw NotFoundException("order with orderId $orderId not found")
             val airline = airLineCompanyRepo.findAirLineById(order.airlineId) ?: throw NotFoundException("airline with airlineId ${order.airlineId} not found")
-            uri = "${airline.url}/cancel?flightId=${order.flightId}"
+            uri = "${airline.url}/airline/cancel?flightId=${order.flightId}"
             webClient.post().uri(uri).awaitExchange()
             throw NotAcceptableException("order with orderId $orderId not paid")
         }
