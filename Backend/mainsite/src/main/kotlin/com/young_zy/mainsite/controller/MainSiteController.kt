@@ -34,7 +34,7 @@ class MainSiteController {
 
     @PostMapping("/flightReservation/payment")
     suspend fun paymentNotify(@RequestParam orderId: Long){
-
+        return mainSiteService.paymentNotify(orderId)
     }
 
 }
