@@ -5,6 +5,7 @@ import com.young_zy.seller.controller.exception.NotFoundException
 import com.young_zy.seller.model.Flight
 import com.young_zy.seller.repo.SellerRepo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.reactive.TransactionalOperator
@@ -38,8 +39,16 @@ class SellerService{
         }
     }
 
-    fun getAll(): Flow<Flight> {
-        return sellerRepo.findAll()
+    suspend fun getAll(): List<Flight> {
+        return sellerRepo.findAll().toList()
+    }
+
+    suspend fun cancelOrder(flightId: Long){
+        transactionalOperator.executeAndAwait {
+            val flight = sellerRepo.getFlightByFlightId(flightId) ?: throw NotFoundException("flight with flightId $flightId not found")
+            flight.remaining++
+            sellerRepo.updateFlight(flight)
+        }
     }
 
 }

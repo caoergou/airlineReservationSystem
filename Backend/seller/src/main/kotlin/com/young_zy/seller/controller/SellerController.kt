@@ -2,7 +2,6 @@ package com.young_zy.seller.controller
 
 import com.young_zy.seller.model.Flight
 import com.young_zy.seller.service.SellerService
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -48,13 +47,18 @@ class SellerController {
     }
 
     @GetMapping("/airline")
-    suspend fun getAllFlight(): Flow<Flight> {
+    suspend fun getAllFlight(): List<Flight> {
         return sellerService.getAll()
     }
 
     @PostMapping("/airline/order/{flightId}")
     suspend fun order(@PathVariable flightId: Long): Void? {
         return sellerService.order(flightId)
+    }
+
+    @PostMapping("/airline/cancel")
+    suspend fun cancel(@RequestParam flightId: Long){
+        return sellerService.cancelOrder(flightId)
     }
 
 }
