@@ -1,0 +1,6 @@
+const fs=require('fs')
+const path=require('path')
+const jsoN5=require('json5')
+var js=fs.readFileSync(path.join(__dirname,'./flightInfo.json5'),"utf-8")
+console.log(js)
+var obj=jsoN5.parse(js)
