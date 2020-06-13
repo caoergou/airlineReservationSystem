@@ -39,9 +39,9 @@ class ExceptionHandler {
 
     @ExceptionHandler(NotAcceptableException::class)
     fun handleNotAcceptableException(e: NotAcceptableException): ResponseEntity<Any>{
-        return ResponseEntity.status(415).body(
+        return ResponseEntity.status(406).body(
                 Response(
-                        415,
+                        406,
                         false,
                         e.message,
                         null
