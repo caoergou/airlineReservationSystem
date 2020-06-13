@@ -87,7 +87,7 @@ class MainSiteService {
             throw NotAcceptableException("flight $flightId of airline $airlineId sold out")
         }
         //create order
-        uri = "/payment/new?airlineId=${airlineId}&flightId=${flightId}&price=${flight.fare}"
+        uri = "${urlProperty.payment}/payment/new?airlineId=${airlineId}&flightId=${flightId}&price=${flight.fare}"
         val req = webClient.post().uri(uri).awaitExchange()
         val orderId = req.bodyToMono(Long::class.java).awaitFirst()
         uri = "${airline.url}/order/$flightId"
