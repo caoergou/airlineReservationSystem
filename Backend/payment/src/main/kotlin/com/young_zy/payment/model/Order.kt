@@ -13,7 +13,7 @@ data class Order(
         var userId: Long? = null,
         @Column("flight_id")    // 银行角色不应当记录支付无关信息（指航班号和航空公司）
         var flightId: Long,
-        @Column("airlineId")    // 银行角色不应当记录支付无关信息（指航班号和航空公司）
+        @Column("airline_id")    // 银行角色不应当记录支付无关信息（指航班号和航空公司）
         var airLineId: Long,
         @Column("order_price")
         var orderPrice: BigDecimal,
