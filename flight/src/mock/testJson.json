@@ -20,7 +20,7 @@
       "destinationCity": "@city()",
       "airline": "/[0-9]/",
       "DepartureDate": "@date()",
-      "fare": 1699.99,
+      "fare": 2000,
       "remaining": 99
     }
   ]

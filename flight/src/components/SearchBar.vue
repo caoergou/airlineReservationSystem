@@ -1,226 +1,247 @@
 <template>
   <div class="bar">
-    <el-popover
-      ref="popover1"
-      v-model="showDep"
-      title="选择出发城市"
-      width="400"
-      trigger="click"><city-list @setCity="setDep" v-if="showDep"></city-list></el-popover>
-    <el-select
-      class="select"
-      popper-class="my-autocomplete"
-      v-model="depCity"
-      multiple
-      filterable
-      remote
-      :multiple-limit="4"
-      default-first-option
-      placeholder="出发地"
-      :remote-method="querySearch"
-      :loading="loading">
-      <el-option
-        v-for="item in query"
-        :key="item.display"
-        :label="item.key"
-        :value="item.key">
-        <div class="name">{{ item.display }}</div>
-        <span class="addr">{{ item.key }}, {{ item.country }}</span>
-      </el-option>
-    </el-select>
-    <el-button type="text" icon="el-icon-menu" v-popover:popover1></el-button>
-    <el-button round icon="el-icon-refresh" @click="changeArrAndDep()" style="margin-right: 10px"></el-button>
-    <el-popover
-      ref="popover2"
-      v-model="showArr"
-      title="选择目的城市"
-      width="400"
-      trigger="click"><city-list @setCity="setArr" v-if="showArr"></city-list></el-popover>
-    <el-select
-      class="select"
-      popper-class="my-autocomplete"
-      v-model="arrCity"
-      multiple
-      filterable
-      remote
-      :multiple-limit="4"
-      default-first-option
-      placeholder="目的地"
-      :remote-method="querySearch"
-      :loading="loading">
-      <el-option
-        v-for="item in query"
-        :key="item.display"
-        :label="item.key"
-        :value="item.key">
-        <div class="name">{{ item.display }}</div>
-        <span class="addr">{{ item.key }}, {{ item.country }}</span>
-      </el-option>
-    </el-select>
-    <el-button type="text" icon="el-icon-menu" v-popover:popover2></el-button>
-    <span class="right">&nbsp;&nbsp;
-    <el-date-picker
-      class="picker"
-      v-model="date"
-      type="dates"
-      value-format="yyyy-MM-dd"
-      popper-class="calender"
-      :picker-options="pickerOption"
-      placeholder="选择旅行时间">
-    </el-date-picker>
-      </span>
+    <div class="searchbar">
+      <el-input placeholder="请输入出发城市" v-model="depCity" class="input-with-select" style="line-height:50px;width:200px">
+      </el-input>
+      <el-input placeholder="请输入目的城市" v-model="arrCity" class="input-with-select" style="width:200px;">
+      </el-input>
+      <div class="block">
+        <el-date-picker
+                v-model="date"
+                type="daterange"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="选择出发日期"
+                :picker-options="pickerOptions">
+        </el-date-picker>
+        <el-button slot="append" @click="search()" icon="el-icon-search"></el-button>
+      </div>
+    </div>
 
-    <el-button type="primary" round icon="el-icon-search" @click="search()"></el-button>
 
+
+    <div class="search-result">
+      <el-table
+              :header-cell-style="{background:'#d3d7d4'}"
+              :data="tableData"
+              style="width: 100%"
+              ref="selectData"
+              :row-class-name="tableRowClassName"
+              :default-sort = "{prop: 'DepartureDate', order: 'descending'}">
+
+        <el-table-column
+                prop="flightID"
+                label="航班编号"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="flightName"
+                label="航空公司"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="departureCity"
+                label="出发城市">
+        </el-table-column>
+        <el-table-column
+                prop="departurePort"
+                label="出发机场">
+        </el-table-column>
+        <el-table-column
+                prop="destinationCity"
+                label="目的城市">
+        </el-table-column>
+        <el-table-column
+                prop="destinationPort"
+                label="目的机场">
+        </el-table-column>
+        <el-table-column
+                prop="DepartureDate"
+                sortable
+                label="出发日期">
+        </el-table-column>
+        <el-table-column
+                sortable
+                prop="fare"
+                label="票价"
+                class="el-icon-price-tag"
+        >
+        </el-table-column>
+        <el-table-column
+                sortable
+                prop="remaining"
+                label="剩余票量"
+                :formatter="formatter">
+        </el-table-column>
+        <el-table-column
+                fixed="right"
+                label="操作"
+                width="100">
+          <template slot-scope="scope">
+            <el-button
+                    @click="open(scope.row)"
+                    type="primary" size="small">预定</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-const CityList = resolve => { require(['./CityList'], resolve) }
+let moment = require("moment");
 export default {
-  components: {
-    CityList
+
+  created(){
+    const _this=this;
+   // http://localhost:8080/flightReservation获取所有航班接口
+    axios.get('/airline').then(function (res){
+      console.log(res);
+      _this.tableData=res.data.info.list;
+    });
+//获取账户信息接口
+    axios.get('/payment/login').then(function (res2){
+      _this.balance=res2.data.balance;
+      console.log(_this.balance);
+    })
   },
   data () {
     return {
-      showDep: false,
-      showArr: false,
-      activeName: '',
-      query: [],
+      selectData:[],
+      searchTable: [],
+      tableData: [],
       date: '',
-      depCity: [],
-      arrCity: [],
-      loading: false,
-      hot: [
-        {country: '中国', key: '北京', display: '北京首都国际机场'},
-        {country: '中国', key: '上海', display: '上海虹桥/浦东国际机场'},
-        {country: '中国', key: '重庆', display: '重庆江北国际机场'},
-        {country: '中国', key: '昆明', display: '昆明长水国际机场'},
-        {country: '中国', key: '杭州', display: '杭州萧山国际机场'},
-        {country: '中国', key: '广州', display: '广州白云国际机场'},
-        {country: '中国', key: '无锡', display: '无锡苏南硕放机场'},
-        {country: '中国', key: '常州', display: '常州奔牛国际机场'},
-        {country: '中国', key: '南京', display: '南京禄口国际机场'},
-        {country: '中国', key: '天津', display: '天津滨海国际机场'},
-        {country: '中国', key: '长春', display: '长春龙嘉国际机场'},
-        {country: '中国', key: '大连', display: '大连周水子国际机场'},
-        {country: '中国', key: '贵阳', display: '贵阳龙洞堡机场'},
-        {country: '中国', key: '深圳', display: '深圳宝安国际机场'}
-      ],
-      pickerOption: {
-        disabledDate (time) {
-          return time.getTime() <= Date.now() - 86400000
-        }
-      }
-    }
-  },
-  mounted () {
-    this.getInfo()
-  },
-  watch: {
-    '$route' (to, from) {
-      this.getInfo()
-    }
-  },
-  methods: {
-    getInfo () {
-      this.depCity = this.$route.params.dep ? this.$route.params.dep.split(',') : []
-      this.arrCity = this.$route.params.arr ? this.$route.params.arr.split(',') : []
-      this.date = this.$route.params.date || ''
-    },
-    search () {
-      const depCity = this.depCity.join(',')
-      const arrCity = this.arrCity.join(',')
-      if (!depCity) {
-        this.$notify.error({
-          title: '参数错误',
-          message: '请输入出发城市'
-        })
-        return
-      }
-      if (!arrCity) {
-        this.$notify.error({
-          title: '参数错误',
-          message: '请输入目的城市'
-        })
-        return
-      }
-      if (!this.date) {
-        this.$notify.error({
-          title: '参数错误',
-          message: '请输入旅行时间'
-        })
-        return
-      }
-      this.$router.push(`/flight/${depCity}/${arrCity}/${this.date}`)
-    },
-    changeArrAndDep () {
-      let temp = this.arrCity
-      this.arrCity = this.depCity
-      this.depCity = temp
-    },
-    querySearch (queryString) {
-      this.loading = true
-      let that = this
-      axios.get('http://dustark.cn:7001/s?lang=zh&q=' + queryString)
-        .then(response => {
-          if (response.data && Array.isArray(response.data.result)) {
-            that.query = response.data.result
-            if (!that.query.length) that.query = that.hot
-          } else {
-            that.query = that.hot
+      depCity: '',
+      arrCity: '',
+      value: '',
+      balance :'',
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
           }
-          that.loading = false
-        }).catch(response => {
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      }
+      }
+    },
+  methods: {
+
+    formatter(row, column) {
+      return row.remaining;
+    },
+    tableRowClassName({row, rowIndex}) {
+      if (rowIndex === 1) {
+
+        return 'warning-row';
+      } else if (rowIndex === 3) {
+        return 'success-row';
+      }
+      return '';
+    },
+    open(row) {
+     // const _selectData = this.$refs.tableData.selection;
+             // .selection;
+      console.log("row");
+      console.log(row);
+      const h = this.$createElement;
+      this.$msgbox({
+        title: '支付订单',
+        message:
+                h('p', null, [
+                          h('span', null, '当前账户余额： '),
+                          h('i', { style: 'color: teal' },this.balance ),
+                          h('p',null,[
+                            h('span', null, '本币订单金额： '),
+                            h('i', { style: 'color: teal' },row.fare )
+                          ])
+                        ],
+
+                ),
+        showCancelButton: true,
+        confirmButtonText: '支付',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = '执行中...';
+            setTimeout(() => {
+              done();
+              setTimeout(() => {
+                instance.confirmButtonLoading = false;
+              }, 100);
+            }, 500);
+          } else {
+            done();
+          }
+        }
+      }).then(action=>{
+        //提交表单接口
+        axios.post('',row).then(function (response) {
+          if(response.data=='success'){
+            this.$message({
+              message: '支付成功 '
+            });
+          }
         })
+      });
+
     },
-    setDep (city) {
-      this.showDep = false
-      if (!city) {
-        this.depCity = []
-        return
+    search: function () {
+     // dateA = moment(itemA.date, "MM-DD-YYYY");
+      var date0    = moment(this.date[0],"YYYY-MM-DD");
+      var date1    = moment(this.date[1],"YYYY-MM-DD");
+      var arrCity = this.arrCity;
+      var depCity = this.depCity;
+      if(arrCity&&depCity){
+
+        console.log(date0);
+        this.searchTable = this.tableData.filter(function (product) {
+          console.log("111")
+          console.log(product.DepartureDate)
+          return product.destinationCity == arrCity && product.departureCity == depCity&&moment(product.DepartureDate,"YYYY-MM-DD").isAfter(date0)&&moment(product.DepartureDate,"YYYY-MM-DD").isBefore(date1);
+        })
+        this.tableData=this.searchTable;
+        return this.tableData;
       }
-      if (this.depCity.length > 3) return
-      this.depCity.push(city)
-    },
-    setArr (city) {
-      this.showArr = false
-      if (!city) {
-        this.arrCity = []
-        return
-      }
-      if (this.arrCity.length > 3) return
-      this.arrCity.push(city)
+
     }
+    //  this.$router.push(`/flight/${depCity}/${arrCity}/${this.date}`)
   }
-}
+  }
+
+
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
   .bar {
     padding: 10px;
-    .el-select {
-      width:25%;
-      margin-bottom: 3px;
-    }
   }
-
-  .name {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    line-height: 15px;
-    padding-top: 10px;
-  }
-  .addr {
-    font-size: 12px;
-    line-height: 12px;
-    color: #b4b4b4;
-  }
-  .calender {
-  }
-  .right {
-    margin-bottom: 3px;
+  .searchbar{
+    margin: auto;
+    width: 50%;
+    height: 100px;
   }
 
 </style>
