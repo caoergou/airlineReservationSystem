@@ -17,8 +17,10 @@ class SellerRepo {
     @Autowired private lateinit var r2dbcClient: DatabaseClient
 
     fun query(departureCity: String, destinationCity: String, departureTime: LocalDate): Flow<Flight> {
-        return r2dbcClient.execute("SELECT * FROM `flight` WHERE DATE(`departure_time`) = :departureTime")
+        return r2dbcClient.execute("SELECT * FROM `flight` WHERE DATE(`departure_time`) = :departureTime AND departure_city=:departureCity And destination_city=:destinationCity")
                 .bind("departureTime", departureTime)
+                .bind("departureCity", departureCity)
+                .bind("destinationCity", destinationCity)
                 .`as`(Flight::class.java)
                 .fetch()
                 .all()
