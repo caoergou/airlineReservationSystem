@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table
 @Table
 data class AirLine(
         @Id
-        @Column("id")
+        @Column("airline_id")
         var airlineId: Long,
         @Column("name")
         var airlineName: String,

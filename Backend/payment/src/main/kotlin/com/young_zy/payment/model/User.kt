@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 data class User(
         @Id
-        @Column("id")
+        @Column("user_id")
         var userId: Long?,
         @Column("username")
         var username: String,

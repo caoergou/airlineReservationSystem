@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 data class Order(
         @Id
-        @Column("id")
+        @Column("order_id")
         var orderId: Long? = null,
         @Column("user_id")
         var userId: Long? = null,
@@ -17,7 +17,7 @@ data class Order(
         var airLineId: Long,
         @Column("order_price")
         var orderPrice: BigDecimal,
-        @Column("id_paid")
+        @Column("is_paid")
         var isPaid: Boolean,
         @Column("order_time")
         var orderTime: LocalDateTime = LocalDateTime.now()
