@@ -53,7 +53,7 @@ class MainSiteService {
                 val temp = reqTemp
                         .bodyToFlow<Flight>()
                         .map { flight ->
-                            FlightResult(flight, it.airlineId, it.airlineName)
+                            FlightResult(flight, it.airlineId!!, it.airlineName)
                         }
                 resFlow = merge(resFlow, temp)
             }
@@ -136,7 +136,7 @@ class MainSiteService {
             val temp = reqTemp
                     .bodyToFlow<Flight>()
                     .map { flight ->
-                        FlightResult(flight, it.airlineId, it.airlineName)
+                        FlightResult(flight, it.airlineId!!, it.airlineName)
                     }
             resFlow = merge(resFlow, temp)
         }
