@@ -4,11 +4,11 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
-@Table
+@Table("airline")
 data class AirLine(
         @Id
         @Column("airline_id")
-        var airlineId: Long,
+        var airlineId: Long?,
         @Column("name")
         var airlineName: String,
         @Column("port")

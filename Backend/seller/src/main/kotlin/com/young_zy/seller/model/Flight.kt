@@ -10,7 +10,7 @@ data class Flight (
          * 航班id
          */
         @Id
-        @Column("id")
+        @Column("flight_id")
         var flightId: Long,
         /**
          * 航班号
