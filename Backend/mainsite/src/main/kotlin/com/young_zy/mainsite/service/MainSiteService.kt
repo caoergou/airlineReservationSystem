@@ -126,4 +126,24 @@ class MainSiteService {
         }
     }
 
+    @ExperimentalCoroutinesApi
+    suspend fun getAll(): List<FlightResult> {
+        val airLineCompanies = airLineCompanyRepo.findAllAirline()
+        var resFlow = flowOf<FlightResult>()
+        airLineCompanies.collect{
+            val uri = "${it.url}/airline"
+            val reqTemp = webClient
+                    .get()
+                    .uri(uri)
+                    .awaitExchange()
+            val temp = reqTemp
+                    .bodyToFlow<Flight>()
+                    .map { flight ->
+                        FlightResult(flight, it.airlineId, it.airlineName)
+                    }
+            resFlow = merge(resFlow, temp)
+        }
+        return resFlow.toList()
+    }
+
 }

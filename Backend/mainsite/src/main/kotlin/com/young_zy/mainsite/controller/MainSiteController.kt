@@ -37,4 +37,9 @@ class MainSiteController {
         return mainSiteService.paymentNotify(orderId)
     }
 
+    @ExperimentalCoroutinesApi
+    @GetMapping("/flightReservation")
+    suspend fun getAll(): List<FlightResult> {
+        return mainSiteService.getAll()
+    }
 }
