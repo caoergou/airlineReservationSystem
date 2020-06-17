@@ -27,9 +27,9 @@ section 基于RESTful架构的航班订票系统
 ### 项目进度
 
 - [x] 项目规划、流程设计、接口设计 CFG
-- [ ] 数据库、Java Bean与DAO类设计  DLY
-- [ ] 前端界面设计与实现 `vue.js` ZH
-- [ ] 后端逻辑实现 `Spring Boot` ZY
+- [x] 数据库、Java Bean与DAO类设计  DLY
+- [x] 前端界面设计与实现 `vue.js` ZH
+- [x] 后端逻辑实现 `Spring Boot` ZY
 - [ ] 项目部署 WH
 
 
