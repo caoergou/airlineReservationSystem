@@ -23,7 +23,7 @@ class UserRepo {
     suspend fun getUserByUid(userId: Long): User? {
         return r2dbcDatabaseClient.select()
                 .from(User::class.java)
-                .matching(where("id").`is`(userId))
+                .matching(where("user_id").`is`(userId))
                 .fetch()
                 .awaitOneOrNull()
     }

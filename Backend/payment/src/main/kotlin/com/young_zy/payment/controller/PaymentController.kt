@@ -4,14 +4,10 @@ import com.young_zy.payment.controller.response.LoginResponse
 import com.young_zy.payment.controller.response.VerifyOrderResponse
 import com.young_zy.payment.service.PaymentService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 
-@Controller
+@RestController
 class PaymentController {
 
     @Autowired private lateinit var paymentService: PaymentService

@@ -24,7 +24,7 @@ class AirLineCompanyRepo {
     suspend fun findAirLineById(airlineId: Long): AirLine? {
         return r2dbcClient.select()
                 .from(AirLine::class.java)
-                .matching(where("id").`is`(airlineId))
+                .matching(where("airline_id").`is`(airlineId))
                 .fetch()
                 .one()
                 .awaitFirstOrNull()
