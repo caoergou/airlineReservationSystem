@@ -27,7 +27,7 @@ class OrderRepo {
                 .into(Order::class.java)
                 .using(order)
                 .map { t ->
-                    t["id"] as Long
+                    t["LAST_INSERT_ID"] as Long
                 }
                 .one()
                 .awaitFirst()
