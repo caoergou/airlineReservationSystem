@@ -36,12 +36,12 @@ Mock.mock('/airline', 'get', {
                 ]
         }
     },
-    Mock.mock('/payment/login','get',{
-        "id": '123456789',
-        "username": "string",
-        "password": "123456789",
-        "balance": "@integer(2000,3000)"
-    }),
+    // Mock.mock('/payment/login','get',{
+    //     "id": '123456789',
+    //     "username": "string",
+    //     "password": "123456789",
+    //     "balance": "@integer(2000,3000)"
+    // }),
 
     Mock.mock('/payment/new','post',function(option){
         //请求相关的参数
