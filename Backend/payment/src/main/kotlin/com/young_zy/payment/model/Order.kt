@@ -2,9 +2,11 @@ package com.young_zy.payment.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Table
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
+@Table("order_")
 data class Order(
         @Id
         @Column("order_id")

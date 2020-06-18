@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class OrderResponse (
-        val id: Long,
+        val orderId: Long,
         var userId: Long,
         var isPaid: Boolean,
         var flightId: Long,

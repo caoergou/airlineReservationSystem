@@ -25,8 +25,6 @@ class MainSiteService {
 
     @Autowired private lateinit var airLineCompanyRepo: AirLineCompanyRepo
 
-    @Autowired private lateinit var webClient: WebClient
-
     @Autowired private lateinit var urlProperty: URLProperty
 
     @Autowired private lateinit var orderRepo: OrderRepo
@@ -45,7 +43,8 @@ class MainSiteService {
         var resFlow = flowOf<FlightResult>()
         airLineCompanies.collect {
             departureDate.forEach { date ->
-                val uri = "${it.url}/airline/findByRoute?departureCity=${departureCity}&destinationCity=${destinationCity}&departureDate=${date}&orderBy=${orderBy}&reverse=${reverse}"
+                val webClient = WebClient.builder().baseUrl(it.url).build()
+                val uri = "/airline/findByRoute?departureCity=${departureCity}&destinationCity=${destinationCity}&departureDate=${date}&orderBy=${orderBy}&reverse=${reverse}"
                 val reqTemp = webClient
                         .get()
                         .uri(uri)
@@ -78,17 +77,20 @@ class MainSiteService {
     @Throws(NotAcceptableException::class, NotFoundException::class)
     suspend fun order(airlineId: Long, flightId: Long): OrderResponse {
         val airline = airLineCompanyRepo.findAirLineById(airlineId) ?: throw NotFoundException("airline with id $airlineId not found")
-        var uri = "${airline.url}/$flightId"
-        val flight = webClient.get().uri(uri).awaitExchange().bodyToMono(Flight::class.java).awaitFirst()
+        var uri = "/airline/$flightId"
+        val airlineWebClient = WebClient.builder().baseUrl(airline.url).build()
+        val response = airlineWebClient.get().uri(uri).awaitExchange()
+        val flight = response.bodyToMono(Flight::class.java).awaitFirst()
         if(flight.remaining <= 0){
             throw NotAcceptableException("flight $flightId of airline $airlineId sold out")
         }
         //create order
-        uri = "${urlProperty.payment}/payment/new?airlineId=${airlineId}&flightId=${flightId}&price=${flight.fare}"
-        val req = webClient.post().uri(uri).awaitExchange()
+        uri = "/payment/new?airlineId=${airlineId}&flightId=${flightId}&flightPrice=${flight.fare}"
+        val paymentWebClient = WebClient.builder().baseUrl(urlProperty.payment).build()
+        val req = paymentWebClient.post().uri(uri).awaitExchange()
         val orderId = req.bodyToMono(Long::class.java).awaitFirst()
-        uri = "${airline.url}/order/$flightId"
-        val res = webClient.post().uri(uri).awaitExchange()
+        uri = "/airline/order/$flightId"
+        val res = airlineWebClient.post().uri(uri).awaitExchange()
         if(res.rawStatusCode() == 406){
             throw NotAcceptableException("flight has been sold out")
         }
@@ -108,8 +110,9 @@ class MainSiteService {
     }
 
     suspend fun paymentNotify(orderId: Long){
-        var uri = "${urlProperty.payment}/payment/verifyOrder?orderId=${orderId}"
-        val response = webClient.get().uri(uri).awaitExchange()
+        var uri = "/payment/verifyOrder?orderId=${orderId}"
+        val paymentWebClient = WebClient.builder().baseUrl(urlProperty.payment).build()
+        val response = paymentWebClient.get().uri(uri).awaitExchange()
         if (response.rawStatusCode() == 404){
             throw NotFoundException("order with orderId $orderId not found")
         }
@@ -117,8 +120,9 @@ class MainSiteService {
         if(!responseBody.isPaid){
             val order = orderRepo.findOrderByOrderId(orderId) ?: throw NotFoundException("order with orderId $orderId not found")
             val airline = airLineCompanyRepo.findAirLineById(order.airlineId) ?: throw NotFoundException("airline with airlineId ${order.airlineId} not found")
-            uri = "${airline.url}/airline/cancel?flightId=${order.flightId}"
-            webClient.post().uri(uri).awaitExchange()
+            val airlineWebClient = WebClient.builder().baseUrl(airline.url).build()
+            uri = "/airline/cancel?flightId=${order.flightId}"
+            airlineWebClient.post().uri(uri).awaitExchange()
             throw NotAcceptableException("order with orderId $orderId not paid")
         }
     }
@@ -128,7 +132,8 @@ class MainSiteService {
         val airLineCompanies = airLineCompanyRepo.findAllAirline()
         var resFlow = flowOf<FlightResult>()
         airLineCompanies.collect{
-            val uri = "${it.url}/airline"
+            val uri = "/airline"
+            val webClient = WebClient.builder().baseUrl(it.url).build()
             val reqTemp = webClient
                     .get()
                     .uri(uri)

@@ -7,7 +7,7 @@ data class FlightResult(
         /**
          * 航空公司id
          */
-        var airLineId: Long,
+        var airlineId: Long,
         /**
          * 航班id
          */
@@ -49,8 +49,8 @@ data class FlightResult(
          */
         var remaining: Long
 ){
-    constructor(flight: Flight, airLineId: Long, airlineName: String): this(
-            airLineId,
+    constructor(flight: Flight, airlineId: Long, airlineName: String): this(
+            airlineId,
             flight.flightId,
             airlineName,
             flight.number,
