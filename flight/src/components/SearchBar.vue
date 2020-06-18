@@ -102,12 +102,7 @@ export default {
       console.log("table")
       console.log(_this.tableData);
     });
-//获取账户信息接口
-    axios.post('/payment/login?username=admin&password=admin').then(function (res2){
-      _this.balance=res2.data.balance;
-      _this.token=res2.data.token;
-      console.log(_this.token);
-    })
+
   },
   data () {
     return {
@@ -173,6 +168,12 @@ export default {
              // .selection;
       console.log("row");
       console.log(row);
+      //获取账户信息接口
+      axios.post('/payment/login?username=admin&password=admin').then(function (res2){
+        _this.balance=res2.data.balance;
+        _this.token=res2.data.token;
+        console.log(_this.token);
+      })
       const h = this.$createElement;
       axios.post('/flightReservation/order',null,{
         params:{
@@ -240,10 +241,20 @@ export default {
             }).then(function (response3) {
               console.log("/flightReservation/payment");
               console.log(response3);
-              _this.$message({
-                title:'success',
-                message: '支付成功 '
-              });
+              if(response3.status==200)
+              {
+                _this.$message({
+                  title:'success',
+                  message: '支付成功 '
+                });
+              }
+              else
+              {
+                _this.$message({
+                  title:'err',
+                  message: '支付失败 '
+                });
+              }
             })
 
           })
