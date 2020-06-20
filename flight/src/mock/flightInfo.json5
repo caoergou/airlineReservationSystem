@@ -1,0 +1,12 @@
+{
+  flightID: '/\d{4,6}/',
+"flightName": "@cname",
+departurePort: "@cname",
+departureCity: "@city",
+destinationPort: "@city",
+destinationCity: "@city",
+airline: '/[0-9]/',
+DepartureDate: '@date',
+fare: 1699.99,
+remaining: 99
+}

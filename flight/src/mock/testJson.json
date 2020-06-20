@@ -1,0 +1,27 @@
+{
+  "info":[{
+    "flightID":"@id()",
+    "flightName": "@cname()",
+    "departurePort": "@cname()",
+    "departureCity": "@city()",
+    "destinationPort": "@city()",
+    "destinationCity": "@city()",
+    "airline": "/[0-9]/",
+    "DepartureDate": "@date()",
+    "fare": 1699.99,
+    "remaining": 99
+  },
+    {
+      "flightID":"@id()",
+      "flightName": "@cname()",
+      "departurePort": "@cname()",
+      "departureCity": "@city()",
+      "destinationPort": "@city()",
+      "destinationCity": "@city()",
+      "airline": "/[0-9]/",
+      "DepartureDate": "@date()",
+      "fare": 2000,
+      "remaining": 99
+    }
+  ]
+}
